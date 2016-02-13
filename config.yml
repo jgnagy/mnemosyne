@@ -8,3 +8,7 @@
       rds:
         instance: 'crucible-rds'
         max_backups: 14
+    - id: i-820ecf45
+      name: hipchat
+      reboot: false
+      max_backups: 7
