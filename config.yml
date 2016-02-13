@@ -1,0 +1,10 @@
+---
+  region: us-west-2
+  instances:
+    - id: i-cc1ef30b
+      name: crucible
+      reboot: false
+      max_backups: 7
+      rds:
+        instance: 'crucible-rds'
+        max_backups: 14
