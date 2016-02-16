@@ -9,7 +9,13 @@ require 'yaml'
 require 'colorize'
 require 'aws-sdk'
 
-Config = YAML.load_file('./config.yml')
+@config_file = if ARGV[0]
+  ARGV[0]
+else
+  './config.yml'
+end
+
+Config = YAML.load_file(@config_file)
 
 @rds_client = Aws::RDS::Client.new(region: Config['region'])
 @ec2_client = Aws::EC2::Client.new(region: Config['region'])
@@ -45,12 +51,32 @@ def backup_instance(instance)
   image_id = "#{name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
   reboot = instance.key?('reboot') ? instance['reboot'] : false
   puts ">> Creating EC2 AMI #{image_id}".green
-  @ec2_client.create_image(
+  new_ami_id = @ec2_client.create_image(
     instance_id: instance['id'],
     name: image_id,
     description: "Mnemosyne backup of #{name}",
     no_reboot: reboot ? false : true
   )
+
+  # Tag the new AMI so we can retrieve it later
+  @ec2_client.create_tags(resources: [new_ami_id.image_id], tags: [{key: "MnemosyneName", value: name}])
+
+  # Look up AMIs with our tag
+  amis = @ec2_client.describe_images(filters: [
+    {name: 'tag:MnemosyneName', values: [name]},
+    {name: 'state', values: ['available']}
+  ]).images
+
+  # isolate AMIs older than our max (set via the config)
+  to_remove = (amis - amis.last(instance['max_backups'])).collect do |a|
+    a.image_id
+  end
+
+  # Deregister (delete) the old AMIs
+  to_remove.each do |old_ami|
+    puts ">> Deregistering AMI #{old_ami}...".red
+    @ec2_client.deregister_image(image_id: old_ami)
+  end
 end
 
 Config['instances'].each do |instance|
