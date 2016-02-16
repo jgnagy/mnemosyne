@@ -5,17 +5,26 @@
 #
 # Lovingly hand-crafted by: Jonathan Gnagy <jgnagy@intellisis.com>
 
+require 'rubygems'
+require 'bundler/setup'
+
 require 'yaml'
 require 'colorize'
 require 'aws-sdk'
 
+# Either load the config from a specific location, or look in "." for config.yml
 @config_file = if ARGV[0]
   ARGV[0]
 else
   './config.yml'
 end
 
-Config = YAML.load_file(@config_file)
+begin
+  Config = YAML.load_file(@config_file)
+rescue => e
+  puts "Unable to load config from #{@config_file}:".red
+  fail e
+end
 
 @rds_client = Aws::RDS::Client.new(region: Config['region'])
 @ec2_client = Aws::EC2::Client.new(region: Config['region'])
