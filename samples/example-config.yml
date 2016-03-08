@@ -1,0 +1,14 @@
+---
+  region: us-east-1
+  instances:
+    - id: i-abcd1234
+      name: app1
+      reboot: false
+      max_backups: 14
+      rds:
+        instance: 'app1-rds'
+        max_backups: 14
+    - id: i-90214ee
+      name: app2
+      reboot: false
+      max_backups: 7

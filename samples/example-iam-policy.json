@@ -1,0 +1,35 @@
+{
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Sid":"AllowMnemosyneRDS",
+         "Effect":"Allow",
+         "Action":[
+           "rds:Describe*",
+           "rds:ListTagsForResource",
+           "rds:CreateDBSnapshot",
+           "rds:DeleteDBSnapshot"
+         ],
+         "Resource":"arn:aws:rds:*"
+      },
+      {
+         "Sid":"AllowMnemosyneEC2",
+         "Effect":"Allow",
+         "Action":[
+           "ec2:Describe*",
+           "ec2:RunInstances",
+           "ec2:StopInstances",
+           "ec2:StartInstances",
+           "ec2:CreateImage",
+           "ec2:RegisterImage",
+           "ec2:CreateTags",
+           "ec2:DeregisterImage",
+           "ec2:DeleteSnapshot",
+           "ec2:ModifyImageAttribute",
+           "ec2:ModifySnapshotAttribute",
+           "ec2:ModifyVolumeAttribute"
+         ],
+         "Resource":"*"
+      }
+   ]
+}
