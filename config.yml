@@ -1,6 +1,13 @@
 ---
   region: us-west-2
   instances:
+    - id: i-c8433a0f
+      name: confluence
+      reboot: false
+      max_backups: 7
+      rds:
+        instance: 'confluence-rds'
+        max_backups: 14
     - id: i-cc1ef30b
       name: crucible
       reboot: false
@@ -12,3 +19,10 @@
       name: hipchat
       reboot: false
       max_backups: 7
+    - id: i-694fd3ae
+      name: owncloud
+      reboot: false
+      max_backups: 10
+      rds:
+        instance: 'owncloud-rds'
+        max_backups: 10
