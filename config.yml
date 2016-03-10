@@ -8,6 +8,13 @@
       rds:
         instance: 'confluence-rds'
         max_backups: 14
+    - id: i-a9d1946e
+      name: crowd
+      reboot: false
+      max_backups: 10
+      rds:
+        instance: 'crowd-rds'
+        max_backups: 14
     - id: i-cc1ef30b
       name: crucible
       reboot: false
