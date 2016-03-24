@@ -7,21 +7,21 @@
       max_backups: 7
       rds:
         instance: 'confluence-rds'
-        max_backups: 14
+        max_backups: 7
     - id: i-a9d1946e
       name: crowd
       reboot: false
       max_backups: 10
       rds:
         instance: 'crowd-rds'
-        max_backups: 14
+        max_backups: 3
     - id: i-cc1ef30b
       name: crucible
       reboot: false
       max_backups: 7
       rds:
         instance: 'crucible-rds'
-        max_backups: 14
+        max_backups: 3
     - id: i-820ecf45
       name: hipchat
       reboot: false
@@ -32,4 +32,4 @@
       max_backups: 10
       rds:
         instance: 'owncloud-rds'
-        max_backups: 10
+        max_backups: 3
