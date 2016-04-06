@@ -11,7 +11,7 @@
     - id: i-a9d1946e
       name: crowd
       reboot: false
-      max_backups: 10
+      max_backups: 5
       rds:
         instance: 'crowd-rds'
         max_backups: 3
@@ -26,6 +26,13 @@
       name: hipchat
       reboot: false
       max_backups: 7
+    - id: i-701620b7
+      name: jira
+      reboot: false
+      max_backups: 7
+      rds:
+        instance: 'jira-rds'
+        max_backups: 3
     - id: i-694fd3ae
       name: owncloud
       reboot: false
