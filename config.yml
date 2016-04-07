@@ -8,7 +8,7 @@
       rds:
         instance: 'confluence-rds'
         max_backups: 7
-    - id: i-a9d1946e
+    - id: i-46280e81
       name: crowd
       reboot: false
       max_backups: 5
