@@ -33,6 +33,10 @@
       rds:
         instance: 'jira-rds'
         max_backups: 3
+    - id: i-84171343
+      name: nexus
+      reboot: false
+      max_backups: 7
     - id: i-694fd3ae
       name: owncloud
       reboot: false
