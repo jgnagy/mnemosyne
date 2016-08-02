@@ -33,6 +33,13 @@
       rds:
         instance: 'jira-rds'
         max_backups: 3
+    - id: i-600babcf
+      name: bitbucket
+      reboot: false
+      max_backups: 3
+      rds:
+        instance: 'bitbucket-rds'
+        max_backups: 3
     - id: i-84171343
       name: nexus
       reboot: false
