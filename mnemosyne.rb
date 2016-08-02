@@ -102,7 +102,7 @@ def backup_instance(instance)
   current_amis.map(&:image_id).each do |ami|
     ami_ebs_snaps.delete_if {|snap| snap.description.match /#{ami}/ }
   end
-    
+
   # Remove the old snapshots
   ami_ebs_snaps.each do |snapshot|
     puts ">> Deleting Snapshot #{snapshot.snapshot_id}...".red
