@@ -106,7 +106,7 @@ def backup_instance(instance)
   # Remove the old snapshots
   ami_ebs_snaps.each do |snapshot|
     puts ">> Deleting Snapshot #{snapshot.snapshot_id}...".red
-    #@ec2_client.delete_snapshot(snapshot_id: snapshot.snapshot_id)
+    @ec2_client.delete_snapshot(snapshot_id: snapshot.snapshot_id)
   end
 end
 
