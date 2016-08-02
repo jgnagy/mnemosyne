@@ -86,6 +86,28 @@ def backup_instance(instance)
     puts ">> Deregistering AMI #{old_ami}...".red
     @ec2_client.deregister_image(image_id: old_ami)
   end
+
+  # Look through all snapshots, narrowing down to just those created by AMI process for this instance
+  ami_ebs_snaps = @ec2_client.describe_snapshots.snapshots.collect do |snap|
+    snap if snap.description.match /CreateImage\(#{instance['id']}\)/
+  end.compact
+
+  # Look up current AMIs with our tag (after some deregistrations)
+  current_amis = @ec2_client.describe_images(filters: [
+    {name: 'tag:MnemosyneName', values: [name]},
+    {name: 'state', values: ['available']}
+  ]).images
+
+  # only delete non-current EBS snapsnots
+  current_amis.map(&:image_id).each do |ami|
+    ami_ebs_snaps.delete_if {|snap| snap.description.match /#{ami}/ }
+  end
+    
+  # Remove the old snapshots
+  ami_ebs_snaps.each do |snapshot|
+    puts ">> Deleting Snapshot #{snapshot.snapshot_id}...".red
+    #@ec2_client.delete_snapshot(snapshot_id: snapshot.snapshot_id)
+  end
 end
 
 Config['instances'].each do |instance|
