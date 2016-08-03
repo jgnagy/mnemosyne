@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+# This is the wrapper / glue for Mnemosyne.
+# Mnemosyne manages AWS backups.
+#
+# Lovingly hand-crafted by: Jonathan Gnagy <jgnagy@knuedge.com>
+
+require 'mnemosyne'
+
+Mnemosyne.config.rds.each do |instance|
+  rds_instance = Mnemosyne::Resources::RDSInstance.new(
+    instance['id'],
+    instance['max_backups']
+  )
+  rds_instance.create_snapshot(verbose: Mnemosyne.config.verbose)
+  rds_instance.cleanup_snapshots(verbose: Mnemosyne.config.verbose)
+end
+
+Mnemosyne.config.ec2.each do |instance|
+  ec2_instance = Mnemosyne::Resources::EC2Instance.new(
+    instance['id'],
+    instance['name'],
+    instance['max_backups']
+  )
+  ec2_instance.create_ami(verbose: Mnemosyne.config.verbose)
+  ec2_instance.cleanup_amis(verbose: Mnemosyne.config.verbose)
+  ec2_instance.cleanup_ebs_snapshots(verbose: Mnemosyne.config.verbose)
+end
+
+puts "> All finished!".green.bold
