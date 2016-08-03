@@ -105,8 +105,13 @@ def backup_instance(instance)
 
   # Remove the old snapshots
   ami_ebs_snaps.each do |snapshot|
-    puts ">> Deleting Snapshot #{snapshot.snapshot_id}...".red
-    @ec2_client.delete_snapshot(snapshot_id: snapshot.snapshot_id)
+    # Only delete snapshots older than 48 hours...
+    if snapshot.start_time + 48 * 60 * 60 ) < Time.now
+      puts ">> Deleting Snapshot #{snapshot.snapshot_id}...".red
+      @ec2_client.delete_snapshot(snapshot_id: snapshot.snapshot_id)
+    else
+      puts ">>> Skipping Deletion of Snapshot #{snapshot.snapshot_id} based on its age...".yellow
+    end
   end
 end
 
