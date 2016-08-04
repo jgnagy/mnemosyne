@@ -6,15 +6,17 @@ Mnemosyne, pronounced phonetically: "neh-mah-seh-nee", is a Greek Titaness and k
 
 * Ruby 2.x or better
 * AWS Credentials stored at `~/.aws/credentials`
+* A Mnemosyne config file stored at `~/.mnemosyne/config.yml`
 * The [bundler](http://bundler.io/) Ruby Gem
 
 ## Usage
 
 ### Installation
 
-After downloading / cloning the source code, install `Mnemosyne`'s dependencies:
+After downloading / cloning the source code, create and install the `Mnemosyne` gem:
 
-    $ bundle install
+    $ gem build mnemosyne.gemspec
+    $ gem install mnemosyne-*.gem
 
 Now, create a config file for `Mnemosyne`.
 
@@ -24,28 +26,27 @@ As an example, here is a sample config file:
     
     ---
       region: us-west-2
-      instances:
-        - id: i-abcdef12
+      verbose: true
+      rds:
+        - id: 'app1-rds'
+          max_backups: 14
+      ec2:
+        - id: i-abcd1234
           name: app1
-          reboot: false
-          max_backups: 7
-          rds:
-            instance: 'app1-rds'
-            max_backups: 14
-        - id: i-9876abcd
+          max_backups: 14
+        - id: i-90214ee
           name: app2
-          reboot: true
-          max_backups: 3
+          max_backups: 7
     
 
-Given this example, `Mnemosyne` will operate in the `us-west-2` AWS region, and will operate on two EC2 instances. For the first instance, named by EC2 as `i-abcdef12`, `Mnemosyne` will refer to it as `app1`, will create an AMI without rebooting the instance, will retain 7 AMIs and will backup the associated RDS instance. This RDS instance is named by AWS as `app1-rds`, and `Mnemosyne` will retain 14 snapshots of this DB instance. For the second instance, named by AWS as `i-9876abcd`, `Mnemosyne` will call it `app2`, **will** reboot the instance to do a solid backup, and will retain 3 backups.
+Given this example, `Mnemosyne` will operate in the `us-west-2` AWS region, and will operate on two EC2 instances. For the first instance, named by EC2 as `i-abcd1234`, `Mnemosyne` will refer to it as `app1`, will create an AMI without rebooting the instance and will retain 14 AMIs. `Mnemosyne` will also backup the associated RDS instance. This RDS instance is named by AWS as `app1-rds`, and `Mnemosyne` will retain 14 snapshots of this DB instance. For the second instance, named by AWS as `i-90214ee`, `Mnemosyne` will call it `app2`, will retain 7 backups.
 
-The significance of the names `Mnemosyne` provides instances is that the AMIs are named (and tagged) based on the `name` attribute provided in the config file. It is worth noting that `id` for EC2 instances, and `instance` for RDS instances are **provided by AWS** and should come from the AWS Admin Console.
+The significance of the names `Mnemosyne` provides instances is that the AMIs are named (and tagged) based on the `name` attribute provided in the config file. It is worth noting that `id` for EC2 instances, and `id` for RDS instances are **provided by AWS** and should come from the AWS Admin Console.
 
 ### Running
 
-To run, just execute the `mnemosyne.rb` file, optionally passing it a path to your config file. If your config file is the one provided with this repo, called `config.yml`, and if your current working directory the root of this repository, then you can simply run `mnemosyne.rb` without any arguments.
+To run, just execute the `mnemosyne` from anywhere (it should be put in your `$PATH`). Just be sure to place your config in `~/.mnemosyne/`, and call it `config.yml`.
 
-    ./mnemosyne.rb
+    mnemosyne
 
 The script will, by default, provide output based on what changes is makes. Eventually `--help` and `--debug` options will be added.
