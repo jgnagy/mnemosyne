@@ -71,7 +71,11 @@ module Mnemosyne
       def delete_ebs_snapshot(identifier, options = {})
         aws_client.action do |client|
           puts ">> Deleting Snapshot #{identifier}...".red if options[:verbose]
-          client.delete_snapshot(snapshot_id: identifier)
+          begin
+            client.delete_snapshot(snapshot_id: identifier)
+          rescue Aws::EC2::Errors::InvalidSnapshotInUse => e
+            puts ">>> Not Deleting Snapshot #{identifier}, in use by AMI...".yellow if options[:verbose]
+          end
         end
       end
 
