@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.platform    = Gem::Platform::RUBY
   s.post_install_message = 'Thanks for installing Mnemosyne!'
-  s.homepage    = 'https://bitbucket.intellisis.com/projects/ITS/repos/mnemosyne/browse'
+  s.homepage    = 'https://github.com/knuedge/mnemosyne'
 
   # Dependencies
   s.add_runtime_dependency 'aws-sdk',  '~> 2'
